@@ -1,0 +1,584 @@
+\chapter{Appendix to ``Dynamic Treatment Effect Estimation with Interactive Fixed Effects and Short Panels''}
+
+
+% ------------------------------------------------------------------------------
+\section{Proofs}\label{sec:generalized-proofs}
+% ------------------------------------------------------------------------------
+
+
+
+\subsection{Proof of \autoref{theorem:ATT_identification}}
+
+Let $t \geq g$ for the given group $g$.
+
+\begin{equation*}
+    \expec{y_{it} - \bm P(\bm{F}_{t}', \bm{F}_{t < g}) \bm y_{i,t < g}}{G_i = g} = \expec{y_{it}(1)}{G_i = g} - \expec{\bm P(\bm{F}_{t}', \bm{F}_{t < g}) \bm y_{i,t < g}}{G_i = g} 
+\end{equation*}
+We use the fact that 
+\begin{align*}
+    \expec{ \bm P(\bm{F}_{t}', \bm{F}_{t < g}) \bm y_{i,t < g} }{G_i = g} 
+    &= \expec{ \bm{F}_{t}' (\bm{F}_{t < g}' \bm{F}_{t < g})^{-1} \bm{F}_{t < g}' \bm y_{i,t < g} }{G_i = g} \\
+    &= \expec{ \bm{F}_{t}' (\bm{F}_{t < g}' \bm{F}_{t < g})^{-1} \bm{F}_{t < g}' \big[\bm{F}_{t < g} \bm \gamma_i + u_{i,t < g} \big] }{G_i = g} \\
+    &= \expec{ \bm{F}_{t}' \bm \gamma_i + \bm{F}_{t}' (\bm{F}_{t < g}' \bm{F}_{t < g})^{-1} \bm{F}_{t < g}' u_{i,t < g} }{G_i = g} \\
+    &= \expec{ y_{it}(\infty) }{G_i = g} 
+\end{align*}
+The second equality hold by Assumption 2 and the fact that $y_{i,t < g} = y_{i, t < g}(0)$. The final equality holds by Assumption 2.
+
+For the second part of the theorem, note that from the column span condition, there exists a $m \times p$ matrix $\bm A$ such that 
+\begin{equation}
+    \bm{F}^*\bm A = \bm{F}
+\end{equation}
+$\bm A$ defines the linear combinations of the columns of $\bm{F}^*$ that span the columns of $\bm{F}$. Thus $\bm{F}_t^{*'} \bm A = \bm{F}_t'$. We then have
+\begin{align*}
+    \bm{F}^{*'}_t (\bm{F}^{*'}_{t < g} \bm{F}^{*'}_{t < g})^{-1} \bm{F}^{*'}_{t < g} \bm{F}_{t < g} \bm \gamma_i
+    &= \bm{F}^{*'}_t (\bm{F}^{*'}_{t < g} \bm{F}^{*}_{t < g})^{-1} \bm{F}^{*'}_{t < g} \bm{F}^{*'}_{t < g} \bm A \bm \gamma_i \\
+    &= \bm{F}^{*'}_t \bm A \bm \gamma_i \\
+    &= \bm{F}^{*'}_t \bm \gamma_i
+\end{align*}
+
+If $m = p$ so that $\bm{F}$ also has full column rank, we can make the stronger statement that the imputation matrices of $\bm{F}$ and $\bm{F}^{*}$ are equal: 
+    \begin{align*}
+        \bm P (\bm{F}_{t \geq g}, \bm{F}_{t < g}) 
+        &= \bm{F}_{t \geq g} (\bm{F}_{t < g}' \bm{F}_{t < g})^{-1} \bm{F}_{t < g}' \\
+        &= \bm{F}_{t \geq g} \bm A (\bm A'\bm{F}_{t < g}' \bm{F}_{t < g} \bm A)^{-1} \bm A' \bm{F}_{t < g}' \\
+        &= \bm{F}^{*'}_{t \geq g} (\bm{F}^{*'}_{t < g} \bm{F}^{*}_{t < g})^{-1} \bm{F}^{*'}_{t < g} \\
+        &= \bm P(\bm{F}^{*}_{t \geq g}, \bm{F}^{*}_{t < g})
+    \end{align*}
+    where the second equality holds because $\bm A$ and $(\bm{F}_{t < g}' \bm{F}_{t < g})$ are full rank.
+
+$\square$
+
+\subsection{Proof of \autoref{lemma:twfe_residuals}}
+
+We first derive the averages defined in Section 2.2 in terms of the potential outcome framework:
+\begin{gather*}
+    \overline{y}_{\infty , t} = \frac{1}{N_{\infty}} \sum_{i = 1}^N D_{i \infty} y_{it} = \overline{\mu}_{\infty} + \lambda_t + \bm{F}_t \overline{\bm \gamma}_{\infty} + \overline{u}_{t, \infty}\\
+    \overline{y}_{i,t\leq T_0} = \frac{1}{T_0} \sum_{t = 1}^{T_0} y_{it} = \mu_i + \overline{\lambda}_{t < T_0} + \overline{\bm{F}}_{t < T_0} \bm \gamma_i + \overline{u}_{i,t < T_0}\\
+    \overline{y}_{\infty, t < T_0} = \frac{1}{N_{\infty} T_0} \sum_{i = 1}^N \sum_{t = 1}^{T_0} D_{i \infty} y_{it} = \overline{\mu}_{\infty} + \overline{\lambda}_{t < T_0} + \overline{\bm{F}}_{t < T_0} \overline{\bm \gamma}_{\infty} + \overline{u}_{\infty, t < T_0}
+\end{gather*}
+where $\overline{\mu}_{\infty}$ and $\overline{\bm \gamma}_{\infty}$ are the averages of the never-treated individuals' heterogeneity and $\overline{\bm{F}}_{t < T_0}$ and $\overline{\lambda}_{t < T_0}$ are the averages of the time effects before anyone is treated. The error averages have the same interpretation as the outcome averages.
+
+The definition of $\tau_{it}$ is the difference between treated and untreated potential outcomes for unit $i$ at time $t$, so for any $(i,t)$, $y_{it} = d_{it} y_{it}(1) + (1-d_{it})y_{it}(\infty) = d_{it} \tau_{it} + y_{it}(\infty)$. Then
+\begin{align*}
+    \tilde{y}_{it} 
+    &= d_{it} \tau_{it} + \bm{F}_t' \bm \gamma_i - \overline{\bm{F}}'_{t < T_0} \bm \gamma_i - \bm{F}_t' \overline{\bm \gamma}_{\infty} + \overline{\bm{F}}_{t < T_0} \overline{\bm \gamma}_{\infty} + u_{it} - \overline{u}_{t,\infty} - \overline{u}_{i, t < T_0} + \overline{u}_{\infty, t < T_0}\\
+    &= d_{it} \tau_{it} + (\bm{F}_t - \overline{\bm{F}}_{t < T_0})' (\bm \gamma_i - \overline{\bm \gamma}_{\infty}) + u_{it} - \overline{u}_{t,\infty} - \overline{u}_{i, t < T_0} + \overline{u}_{\infty, t < T_0}
+\end{align*}
+Taking expectation conditional on $G_i = g$ gives $\expec{u_{it} - \overline{u}_{i, t < T_0}}{G_i = g} = 0$ by Assumption 2 and $\expec{\overline{u}_{\infty, t < T_0} - \overline{u}_{t, \infty} }{G_i = g} = \expec{\overline{u}_{\infty, t < T_0} - \overline{u}_{t, \infty}} = 0$ by random sampling and iterated expectations.
+
+$\square$
+
+\subsection{Proof of \autoref{theorem:ATT_identification}}
+
+We can appeal to standard large sample GMM theory as in \citet{Hansen_1982} due to the types of first-stage factor estimators we consider. We do not consider true ``fixed effects" estimators where the number of parameters grows with the sample size. The IV and cross-sectional averages approaches are based on eliminating the factors (which are fixed in the asymptotic analysis) by reducing them to a smaller set of parameters. For example, while the CCE estimator can be implemented as a pooled regression where unit dummies are interacted with cross-sectional averages, the estimator itself takes a form similar to the within transformation in the linear fixed effects model. In fact, we prove asymptotic unbiasedness of dynamic ATT estimators using the CCE estimator in the first stage \citep{Brown_Butts_Westerlund_2023}\footnote{We consider CCE in a separate paper because the additional modeling assumptions allow for stronger results than those considered in this paper.}.
+
+Consider the QLD estimator of \citet{Ahn_Lee_Schmidt_2013}. They study the linear model
+\begin{equation}
+    \bm y_i = \bm X_i \bm \beta + \bm F \bm \gamma_i + \bm \epsilon_i
+\end{equation}
+They jointly estimate the QLD parameters $\bm \theta$ along with the conditional response parameters $\bm \beta$ using the moment conditions
+\begin{equation}
+    \expec{\bm H(\bm \theta) (\bm y_i - \bm X_i \bm \beta) \otimes \bm w_i} = \bm 0
+\end{equation}
+They show that the estimator is well-behaved and does not suffer from asymptotic bias. As described in \citet{windmeijer2005finite}, the most likely source of finite-sample bias comes from estimating the optimal weight matrix. The appendix of \citet{Ahn_Lee_Schmidt_2013} describes a continuous updating estimator (CUE) based on their moment conditions, which may have less finite-sample bias than the optimal two-step estimator. However, we may also sacrifice efficiency in large samples if their assumed covariance structure is incorrect. 
+
+We now derive the asymptotic variance of the full estimator under a general first-step estimator of the factors. Note that $\bm g_{i\infty}(\bm{\theta}) \otimes \bm g_{ig}(\bm{\theta}, \bm \tau_g) = \bm 0$ (from the $D_{ig}$ terms) and $\bm g_{ih}(\bm{\theta}, \bm \tau_h) \otimes \bm g_{ik}(\bm{\theta}, \bm \tau_k) = \bm 0$ almost surely uniformly over the parameter space for all $g \in \mathcal{G}$ and $h \neq k$. The covariance matrix of these moment functions, which we denote as $\bm \Delta$, is a block diagonal matrix.
+\begin{equation*}
+    \bm \Delta =
+    \begin{pmatrix}
+        \expec{\bm g_{i \infty}(\bm{\theta}) \bm g_{i \infty}(\bm{\theta})'} & \bm 0 & \bm 0 & \hdots & \bm 0\\
+        \bm 0 &  \expec{\bm g_{i g_G}(\bm{\theta}, \bm \tau_{g_G}) \bm g_{i g_G}(\bm{\theta}, \bm \tau_{g_G})' } & \bm 0 & \hdots & \bm 0\\
+        \vdots & & \ddots  &\\
+        \bm 0 & \bm 0 & \bm 0 & \hdots & \expec{ \bm g_{i g_1}(\bm{\theta}, \bm \tau_{g_1}) \bm g_{i g_1}(\bm{\theta}, \bm \tau)'}
+    \end{pmatrix}
+\end{equation*}
+We write the individual blocks as $\bm \Delta_g$ for $g \in \mathcal{G} \cup \{ \infty \}$. The gradient is also simple to compute because all of the moments are linear in the treatment effects. We define the overall gradient $\bm D$ and show it is a lower triangular matrix which we write in terms of its constituent blocks:
+\begin{equation*}
+    \bm D = 
+    \begin{pmatrix}
+        \expec{\nabla_{\bm{\theta}} \bm g_{i\infty}(\bm{\theta}) } & \bm 0 & \bm 0 & \hdots & \bm 0\\
+        \expec{\nabla_{\bm{\theta}} \bm g_{ig_G}(\bm{\theta}, \bm \tau_{g_G})} & -\bm I_{T - g_G + 1} & \bm 0 & \hdots & \bm 0\\
+        \vdots & & \ddots  &\\
+        \expec{\nabla_{\bm{\theta}} \bm g_{ig_1}(\bm{\theta}, \bm \tau_{g_1})} & \bm 0 & \bm 0 & \hdots & -\bm I_{T - g_1 + 1}
+    \end{pmatrix}
+\end{equation*}
+where we write the blocks in the first column as $\bm D_g$ for $g \in \mathcal{G} \cup \{ \infty \}$. The diagonal is made up of negative identity matrices because $\expec{\frac{D_{ig_h}}{\mathbb{P}(D_{ig_h} = 1)}} = 1$.
+
+The overall asymptotic variance given that we use the optimal weight matrix is given by $(\bm D' \bm \Delta^{-1} \bm D)^{-1}$. $\bm\Delta$ is a block diagonal matrix so its inverse is trivial to compute. First, we have
+\begin{equation*}
+    \bm \Delta^{-1} \bm D = 
+    \begin{pmatrix}
+        \bm \Delta_{\infty}^{-1} \bm D_{\infty} & \bm 0 &  \hdots & \bm 0\\
+        \bm \Delta_{g_G}^{-1} \bm D_{g_G} & -\bm \Delta_{g_G}^{-1} & \hdots & \bm 0\\
+        \vdots & & \ddots &\\
+        \bm \Delta_{g_1}^{-1} \bm D_{g_1} & \bm 0 & \hdots & - \bm \Delta_{g_1}^{-1}
+    \end{pmatrix}
+\end{equation*}
+The transpose of the gradient matrix is
+\begin{equation*}
+    \bm D' =
+    \begin{pmatrix}
+        \bm D_{\infty}' & \bm D_{g_G}' & \hdots & \bm D_{g_1}'\\
+        \bm 0 & -\bm I_{T-g_G + 1} & \hdots & \bm 0\\
+        \vdots & & \ddots & \\
+        \bm 0 & \bm 0 & \hdots & - \bm I_{T-g_1 + 1}
+    \end{pmatrix}
+\end{equation*}
+so that we get
+\begin{equation*}
+    \bm D' \bm \Delta^{-1} \bm D = 
+    \begin{pmatrix}
+        \sum_{g \in \mathcal{G}\cup\{\infty\}} \bm D_g' \bm \Delta_g^{-1} \bm D_g & -\bm D_{g_G}' \bm \Delta_{g_G}^{-1} & \hdots & - \bm D_{g_1}' \bm \Delta_{g_G}^{-1}\\
+        -\bm \Delta_{g_G}^{-1} \bm D_{g_G} & \bm \Delta_{g_G}^{-1} & \hdots & \bm 0\\
+        \vdots & & \ddots &\\
+        -\bm \Delta_{g_1}^{-1} \bm D_{g_1} & \bm 0 & \hdots & \bm \Delta_{g_1}^{-1}
+    \end{pmatrix}
+\end{equation*}
+
+We write this matrix as 
+\begin{equation*}
+    \begin{pmatrix}
+        \bm A & \bm B\\
+        \bm C & \bm D
+    \end{pmatrix}
+\end{equation*}
+where $\bm A = \sum_{g \in \mathcal{G}\cup \{\infty\}} \bm D_g' \bm \Delta_g^{-1} \bm D_g$ and $\bm D = \text{diag} \{ \bm \Delta_g^{-1} \}_{g \in \mathcal{G}}$. We then apply Exercise 5.16 of \citet{abadir2005matrix} to get the final inverse. The top left corner of the inverse is $\bm{F}^{-1}$ where
+\begin{align*}
+    (\bm{F})^{-1} 
+    &= (\bm A - \bm B \bm D^{-1} \bm C)^{-1}\\
+    &= \left( \sum_{g \in \mathcal{G}\cup\{\infty\}} \bm D_g' \bm \Delta_g^{-1} \bm D_g - \left( \sum_{g \in \mathcal{G}} \bm D_g' \bm \Delta_g^{-1} \bm D_g \right) \right)^{-1}\\
+    &= (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1}\\
+    &= \text{Avar}(\sqrt{N}(\widehat{\bm{\theta}} - \bm{\theta}))
+\end{align*}
+The rest of the first column of matrices takes the form
+\begin{align*}
+    -\bm D^{-1} \bm C \bm{F}^{-1}
+    &=
+    \begin{pmatrix}
+        \bm D_{g_G}\\
+        \vdots\\
+        \bm D_{g_1}
+    \end{pmatrix}
+    (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1}\\
+    &=
+    \begin{pmatrix}
+        \bm D_{g_G} (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1}\\
+        \vdots\\
+        \bm D_{g_1} (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1}
+    \end{pmatrix}
+\end{align*}
+and the rest of the first row is $- \bm{F}^{-1} \bm B \bm D^{-1} = (- \bm D^{-1} \bm B' \bm{F}^{-1})' = (- \bm D^{-1} \bm C \bm{F}^{-1})'$.
+
+Finally, the bottom-right block, which also gives the asymptotic covariance matrix of the ATT estimators, is 
+\begin{align*}
+    \bm D^{-1} + \bm D^{-1} \bm C \bm{F}^{-1} \bm B \bm D^{-1} 
+    &= \bm D^{-1} + 
+    \begin{pmatrix}
+        \bm D_{g_G} (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1} \bm D_{g_G}' & \hdots & \bm D_{g_G} (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1} \bm D_{g_1}'\\
+        & \ddots &\\
+        \bm D_{g_1} (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1} \bm D_{g_G}' & \hdots & \bm D_{g_1} (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1} \bm D_{g_1}'
+    \end{pmatrix}
+\end{align*}
+The $g$'th diagonal elements of the resulting matrix is $\bm \Delta_g + \bm D_g (\bm D_{\infty}' \bm \Delta_{\infty}^{-1} \bm D_{\infty})^{-1} \bm D_g'$.
+
+
+
+
+$\square$
+
+
+
+
+\subsection{Proof of \autoref{theorem:asymptotic_distribution}}
+
+We derive the limiting theory by multiplying $\widehat{\bm \Delta}_g$ by $(N_g-1)/N_g$ which produces the same limit as $N \rightarrow \infty$. We write
+\begin{equation*}
+    \frac{N_g - 1}{ N_g} \widehat{\bm \Delta}_g = \frac{1}{N_g} \sum_{i = 1}^N D_{ig} \widehat{\bm \Delta}_{ig} \widehat{\bm \Delta}_{ig}' - \widehat{\bm \tau}_g \widehat{\bm \tau}_g'
+\end{equation*}
+We already know that $\widehat{\bm \tau}_g \plim \bm \tau_g$ by Theorem 3.1. Note that 
+\begin{align*}
+    \frac{1}{N_g} \sum_{i = 1}^N D_{ig} \widehat{\bm \Delta}_{ig} \widehat{\bm \Delta}_{ig}' = &\left( \frac{1}{N_g} \sum_{i = 1}^N D_{ig}  \bm y_{i, t \geq g} \bm y_{i, t \geq g}' \right) - \left( \frac{1}{N_g} \sum_{i = 1}^N D_{ig} \bm y_{i, t \geq g} \bm y_{i, t < g}' \right) \bm P(\bm{F}_{t \geq g}(\widehat{\bm{\theta}}), \bm{F}_{t < g}(\widehat{\bm{\theta}}))'\\
+    &- \bm P(\bm{F}_{t \geq g}(\widehat{\bm{\theta}}), \bm{F}_{t < g}(\widehat{\bm{\theta}})) \left( \frac{1}{N_g} \sum_{i = 1}^N D_{ig} \bm y_{i, t < g} \bm y_{i, t \geq g}' \right)\\
+    &- \bm P(\bm{F}_{t \geq g}(\widehat{\bm{\theta}}), \bm{F}_{t < g}(\widehat{\bm{\theta}})) \left( \frac{1}{N_g} \sum_{i = 1}^N D_{ig}  \bm y_{i, t < g} \bm y_{i, t \geq g}' \right) \bm P(\bm{F}_{t \geq g}(\widehat{\bm{\theta}}), \bm{F}_{t < g}(\widehat{\bm{\theta}}))'
+\end{align*} 
+
+Given $\bm P(\bm{F}_{t \geq g}(\widehat{\bm{\theta}}), \bm{F}_{t < g}(\widehat{\bm{\theta}}))$ is equal to its infeasible counterpart $\bm P(\bm{F}_{t \geq g}, \bm{F}_{t < g})$ plus a term that is $O_p(N^{-1/2})$, Assumption 1 and the weak law of large numbers imply 
+\begin{equation*}
+    \frac{1}{N_g} \sum_{i = 1}^N D_{ig} \widehat{\bm \Delta}_{ig} \widehat{\bm \Delta}_{ig}' - \widehat{\bm \tau}_g \widehat{\bm \tau}_g' \plim \expec{\bm g_{ig}(\bm{\theta}, \bm \tau_g)}{G_i = g} = \bm \Delta_g
+\end{equation*}
+The inverse exists with probability approaching one by Assumption 5.
+
+$\square$
+
+\section{The Quasi-Long-Differencing Estimator}
+
+We discuss identification and inference of the imputation estimator using the QLD estimator for the factors. We derive the results here because QLD is used in both the simulations and application. 
+
+\subsection{Identification}
+
+We adapt the identifying assumptions from \citet{Ahn_Lee_Schmidt_2013} to our setup, guaranteeing Assumption \ref{asm:factor_identification} holds. Part (i) of the assumption holds assuming that $\bm F$ is full rank, because there always exists a matrix that applies Gaussian row-reduction to a full rank matrix. For parts (ii) and (iii), we need the following matrix to be full rank: 
+\begin{equation}
+    \bm I_{T-p} \otimes \expec{\bm w_i \bm \gamma_i'}{G_i = \infty}
+\end{equation}
+It implies that the instruments $\bm w_i$ are ``strong" in the sense that they correlate with the factor loadings $\bm \gamma_i$. Unfortunately, this restriction is not easily testable like in the case of two-stage least squares because the variable being instrumented for is unobserved. We leave the question of testing for instrument strength in quasi-differencing for a future project. Part (iv) is an additional assumption that is routinely made in practice. 
+
+\subsection{Asymptotic Variance}
+
+We now derive the analytical formulas for the asymptotic variance when quasi-differencing is used to estimate the factor space. Analytical standard errors can be obtained by replacing the population parameters with their estimators and expectations with the relevant sample average, e.g. expectations of the never-treated group are estimated using the average of the never-treated subsample. Conversely, one can average over the entire sample but multiply each observation by $D_{i\infty}$ and divide by $N_{\infty} / N$. To get the gradient of the set of moment conditions that identify the factor space, we rewrite the moment function as 
+\begin{align*}
+    \bm H(\bm \theta) \bm y_i \otimes \bm w_i
+    &= \text{vec}(\bm w_i \bm y_i' \bm H(\bm \theta)')\\
+    &= (\bm I_{(T-p)} \otimes \bm w_i \bm y_i') \bm K_{(T-p)T} \text{vec}(\bm H(\bm \theta))
+\end{align*}
+where $\bm K_{(T-p)T}$ is the $(T-p)T \times (T-p)T$ commutation matrix and we use the well-known relationship between vectorization and the Kronecker product\footnote{See Exercise 10.18 of \citet{abadir2005matrix}.}. Because $\text{vec}(\bm H(\bm \theta)) = [\text{vec}(\bm I_{T-p})', \bm \theta']'$, the gradient of the moment function is 
+\begin{equation}
+    \left( \bm I_{(T-p)} \otimes \bm w_i \bm y_i' \right) \bm K_{T(T-p)} [\bm 0_{(T-p)^2 \times (T-p)p}', \bm I_{(T-p)p}]'
+\end{equation}
+The expected gradient is obtained by taking expectations conditional on being in the never-treated group.
+
+We now consider the gradient of the moment functions that determine the treatment effects with respect to the factor estimator for a given group treated at time $g$. The relevant part of the moment function for the purpose of finding the gradient is 
+\begin{equation}
+    \bm F_{t \geq g}(\bm \theta)' \left( \bm F_{t < g}(\bm \theta)' \bm F_{t < g}(\bm \theta) \right)^{-1} \bm F_{t < g}(\bm \theta)' \bm y_{i,t < g}
+\end{equation}
+There are two leading cases to compute: $g - 1 \geq T - p$ and $g - 1 < T - p$. In the first case, the parameters $\bm \theta$ are entirely contained in the pre-treatment factor matrix. Then 
+\begin{equation}
+    \bm F_{t < g} = 
+    \begin{pmatrix}
+        \bm \Theta\\
+        \bm E
+    \end{pmatrix}
+\end{equation}
+where $\bm E$ is the first $(g - 1) - (T - p)$ rows of $- \bm I_p$. Then the post-treatment factor matrix is just the lower $T - g + 1$ rows of $- \bm I_p$ so we do not need to worry about differentiating it. In this setting,
+\begin{equation}
+    \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i,t < g} = - \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} 
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g}
+\end{equation}
+We use the notation in Chapter 13 of \citet{abadir2005matrix} to obtain the differential: 
+\begin{align}
+   - &
+   \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} 
+    \begin{pmatrix}
+        (d \bm \Theta)' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g}\\ 
+    &
+    \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \left( (d \bm \Theta)' \bm \Theta  \right) \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1}
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g} \\
+    &
+    \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \left( \bm \Theta' (d \bm \Theta)  \right) \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1}
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g} 
+\end{align}
+which can then be rewritten as 
+\begin{align}
+    -&
+    \left( \bm y_{i,t < g} \otimes \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \right)     \begin{pmatrix}
+        \bm K_{(T-p)p} (d \bm \theta)' & \bm K_{((g-1) - (T-p)p} \text{vec}(\bm E)'
+    \end{pmatrix}'\\
+    &
+    \left( \left( \bm \Theta \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1}
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g} \right)' \otimes \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \right) \bm K_{(T-p)p} d \bm \theta\\
+    &
+    \left( \left( \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1}
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g} \right)' \otimes \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \bm \Theta' \right) d \bm \theta
+\end{align}
+The full gradient is then 
+\begin{align}
+    -&
+    \left( \bm y_{i,t < g} \otimes \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \right)     \begin{pmatrix}
+        \bm K_{(T-p)p}' & \bm 0_{((g-1) - (T-p)p \times (T-p)p} '
+    \end{pmatrix}'\\
+    &
+    \left( \left( \bm \Theta \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1}
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g} \right)' \otimes \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \right) \bm K_{(T-p)p}\\
+    &
+    \left( \left( \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1}
+    \begin{pmatrix}
+        \bm \Theta' & \bm E'
+    \end{pmatrix}
+    \bm y_{i,t < g} \right)' \otimes \left( \bm \Theta' \bm \Theta + \bm E' \bm E \right)^{-1} \bm \Theta' \right)
+\end{align}
+when $g - 1 \geq T-p$. 
+
+The second case, when $g - 1 < T-p$, now has parameters in the post-treatment matrix $\bm F_{t \geq g}$. We redefine the parameters as $\bm \Theta = [ \bm \Theta_1', \bm \Theta_2']'$ where $\bm \Theta_1$ is $(g-1) \times p$ and $\bm \Theta_2$ is $(T-p - g + 1) \times p$. Now we write $\bm F_{t < g} = \bm \Theta_1$ and 
+\begin{equation}
+    \bm F_{t \geq g} = 
+    \begin{pmatrix}
+        \bm \Theta_2\\
+        - \bm I_p
+    \end{pmatrix}
+\end{equation}
+Because $\bm \theta \neq (\text{vec}(\bm \Theta_1)', \text{vec}(\bm \Theta_2)')'$, we define the matrices $\bm E_1 = [\bm I_{g-1}, \bm 0_{(g-1) \times (T-p - g+1)}$ and $\bm E_2 = [ \bm 0_{(T-p - g + 1) \times (g-1)}, \bm I_{(T-p -g + 1)}]$ such that 
+\begin{gather}
+    \bm \Theta_1 = \bm E_1 \bm \Theta\\
+    \bm \Theta_2 = \bm E_2 \bm \Theta
+\end{gather}
+Now we can rewrite the relevant portion of the moment function for the gradient as
+\begin{equation}
+    \begin{pmatrix}
+        \bm E_2 \bm \Theta\\
+        -\bm I_p
+    \end{pmatrix}
+    \left( \bm \Theta' \bm E_1' \bm E_1 \bm \Theta \right)^{-1} \bm \Theta' \bm E_1' \bm y_{i, t < g}
+\end{equation} 
+We can now take the gradient with respect to the full set of parameters $\bm \theta$:
+\begin{align}
+    & 
+    \begin{pmatrix}
+        \bm E_2 d \bm \Theta\\
+        \bm 0_{p \times p}
+    \end{pmatrix}
+    \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g}\label{case2_diff_eq1}\\
+    - & 
+    \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} d \bm \Theta' \bm E_1' \bm F_{t < g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g}\\
+    - & \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm E_1 d \bm \Theta \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g}\\
+    + & 
+    \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} d \bm \Theta' \bm E_1' \bm y_{i, t < g}
+\end{align}
+where we inserted $\bm F_{t < g}$ and $\bm F_{t \geq g}$ for $\bm E_1 \bm \Theta$ and $\bm E_2 \bm \Theta$ respectively to preserve space, noting that these matrices are actually functions of the parameters $\bm \theta$ and not the true, unobserved factors. We rewrite line \eqref{case2_diff_eq1} so we can write the differential in terms of $\bm \theta$: 
+\begin{align}
+    \begin{pmatrix}
+        \bm E_2 d \bm \Theta\\
+        \bm 0_{p \times p}
+    \end{pmatrix}
+    \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g} 
+    &= 
+    \begin{pmatrix}
+        \bm E_2\\
+        \bm 0_{p \times p}
+    \end{pmatrix}
+    d \bm \Theta
+    \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g}\\
+    &=
+    \left( \left( \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g} \right) \otimes 
+        \begin{pmatrix}
+        \bm E_2\\
+        \bm 0_{p \times p}
+    \end{pmatrix}
+    \right)
+    d \bm \theta
+\end{align}
+We put this expression with the others to get the final gradient: 
+\begin{align}
+    &= \left( \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i, t < g} \right) \otimes 
+        \begin{pmatrix}
+        \bm E_2\\
+        \bm 0_{p \times p}
+    \end{pmatrix}\\
+    &
+    - \left( \bm E_1' \bm F_{t < g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i,t < g} \right)' \otimes \left( \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \right) \bm K_{(T-p)p}\\
+    &
+    - \left( \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm y_{i,t < g} \right)' \otimes \left( \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \bm F_{t < g}' \bm E_1 \right)\\
+    &
+    + \left( \bm y_{i,t < g}' \bm E_1 \right) \otimes \left( \bm F_{t \geq g} \left( \bm F_{t < g}' \bm F_{t < g} \right)^{-1} \right) \bm K_{(T-p)p}
+\end{align}
+
+
+% \nick{3/5/2024: The work on the second case below is old and I don't think it works as well as the argument above. I want to make sure I get everything in line. }
+
+% The second case, when $g - 1 < T-p$, now has parameters in the post-treatment matrix $\bm F_{t \geq g}$. We redefine the parameters as $\bm \Theta = [ \bm \Theta_1', \bm \Theta_2']'$ where $\bm \Theta_1$ is $(g-1) \times p$ and $\bm \Theta_2$ is $((T-p) - (g-1) + 1) \times p$. Now we write $\bm F_{t < g} = \bm \Theta_1$ and 
+% \begin{equation}
+%     \bm F_{t \geq g} = 
+%     \begin{pmatrix}
+%         \bm \Theta_2\\
+%         - \bm I_p
+%     \end{pmatrix}
+% \end{equation}
+% so that the relevant portion of the moment function that identifies the ATTs for group $g$ is 
+% \begin{equation}\label{second_case_moment_fn}
+%     \begin{pmatrix}
+%         \bm \Theta_2\\
+%         - \bm I_p
+%     \end{pmatrix}
+%     \left( \bm \Theta_1' \bm \Theta_1 \right)^{-1} \bm \Theta_1' \bm y_{t < g} = 
+%     \begin{pmatrix}
+%         \bm \Theta_2 \left( \bm \Theta_1' \bm \Theta_1 \right)^{-1} \bm \Theta_1' \bm y_{t < g}\\
+%         - \left( \bm \Theta_1' \bm \Theta_1 \right)^{-1} \bm \Theta_1' \bm y_{t < g}
+%     \end{pmatrix}
+% \end{equation}
+% The gradient with respect to $\bm \Theta_2$ can be shown to be 
+% \begin{equation}
+%     \begin{pmatrix}
+%         \left( \left( \bm \Theta_1' \bm \Theta_1 \right)^{-1} \bm \Theta_1' \bm y_{t < g} \right)' \otimes \bm I_{g-1}\\
+%         \bm 0_{p \times ((T-p) - (g-1) + 1)p}
+%     \end{pmatrix}
+% \end{equation}
+% Rewriting equation \eqref{second_case_moment_fn} as $\bm F_{t \geq g} \left( \bm \Theta_1' \bm \Theta_1 \right)^{-1} \bm \Theta_1' \bm y_{t < g}$, we can easily calculate the gradient using the argument from the first case as
+% \begin{align}
+%     & \bm F_{t \geq g} \left( \bm y_{i,t < g} \otimes (\bm \Theta_1' \bm \Theta_1)^{-1} \right) \\
+%     - & \bm F_{t \geq g} \left( \left( (\bm \Theta_1' \bm \Theta_1)^{-1} \bm \Theta_1' \bm y_{i, t < g} \right)' \otimes (\bm \Theta_1' \bm \Theta_1)^{-1} \right) \bm K_{(g-1) p}\\
+%     - & \bm F_{t > g} \left( \left( (\bm \Theta_1' \bm \Theta_1)^{-1} \bm \Theta_1' \bm y_{i,t<g} \right)' \otimes (\bm \Theta_1' \bm \Theta_1)^{-1} \bm \Theta_1' \right)
+% \end{align}
+% \nick{3/4/2024: Again, need to double check all this stuff. Also need to find the linear transformation that turns $(\bm \theta_1', \bm \theta_2')' \rightarrow \bm \theta$.}
+
+
+% ------------------------------------------------------------------------------
+\section{Inference of Aggregate Treatment Effects}
+% ------------------------------------------------------------------------------
+
+As in \citet{Callaway_Santanna_2021}, we can form aggregates of our group-time average treatment effects. For example, event-study type coefficients would average over the $\tau_{gt}$ where $t - g = e$ for some relative event-time $e$ with weights proportional to group membership. Consider a general aggregate estimand $\delta$ which we define as a weighted average of $ATT(g,t)$:
+\begin{equation}
+\delta = \sum_{g\in \mathcal{G}} \sum_{t > T_0} w(g,t) \tau_{gt}
+\end{equation}
+where the weights $w(g,t)$ are non-negative and sum to one. Table 1 of \citet{Callaway_Santanna_2021} and the surrounding discussion describes various treatment effect aggregates and discuss explicit forms for the weights. 
+
+Our plug-in estimate for $\delta$ is given by $\hat{\delta} = \sum_{g\in \mathcal{G}} \sum_{t > T_0} \hat{w}(g,t) \hat{\tau}_{gt}$. Inference on this term follows directly from Corollary 2 in \citet{Callaway_Santanna_2021} if we have the influence function for our $\tau_{gt}$ estimates. Rewriting our moment equations in an asymptotically linear form, we have:
+\begin{equation}
+    \sqrt{N}\Big( (\widehat{\bm{\theta}}', \widehat{\bm \tau}')' - (\bm{\theta}', \bm \tau')' \Big) = - \left( \frac{1}{\sqrt{N}} \sum_{i = 1}^N (\bm D' \bm \Delta^{-1} \bm D)^{-1} \bm D' \bm \Delta^{-1} \bm g_i(\bm{\theta}, \bm \tau) \right) + o_p(1).
+\end{equation}
+This form comes from the fact that the weight matrix is positive definite with probability approaching one\footnote{This is a well-known expansion for analyzing the asymptotic properties of GMM estimators. See Chapter 14 of \citet{Wooldridge_2010} for example.}. The first term on the right-hand side is the influence function and hence inference on aggregate quantities follows directly. This result allows for use of the multiplier bootstrap to estimate standard errors in a computationally efficient manner.
+
+% ------------------------------------------------------------------------------
+\section{Inference in Two-Way Fixed Effect Model}\label{sec:twfe_inference}
+% ------------------------------------------------------------------------------
+
+We derive the asymptotic distribution of our imputation estimator based off of the two-way error model in equation (1). First, we note that this estimator can be written in terms of the imputation matrix from Section 2. In particular, let $\bm 1_t$ be a $T \times 1$ vector of ones up the $t$'th spot, with all zeros after. Define $\overline{\bm y}_{\infty} = (\overline{y}_{\infty, 1},..., \overline{y}_{\infty, T})'$ be the full vector of never-treated cross-sectional averages. Then our imputation transformation can be written as 
+\begin{equation}
+    \tilde{\bm y}_i = \left[ \bm I_T - \bm P(\bm 1_T, \bm 1_{T_0}) \right] (\bm y_i - \overline{\bm y}_{\infty})
+\end{equation}
+where the $t^{th}$ component of the above $T$-vector is 
+\begin{equation}
+    d_{it} \tau_{it} + \tilde{u}_{it},
+\end{equation}
+with $\tilde{u}_{it}$ is defined as the same transformation as $\tilde{y}_{it}$.
+
+The imputation step of our estimator is a just-identified system of equations. As such, we do not need to worry about weighting in implementation and inference comes from standard theory of M-estimators. In fact, we have the following closed-form solution for the estimator of a group-time average treatment effect: 
+\begin{equation}
+    \widehat{\tau}_{gt} = \frac{1}{N_{g}}\sum_{i} D_{ig} \tilde{y}_{it},
+\end{equation}
+where $N_{g} = \sum_i D_{ig}$ is the number of units in group $g$. 
+
+The following theorem characterizes estimation under the two-way error model:
+\begin{theorem}\label{theorem:twfe}
+    Assume untreated potential outcomes take the form of the two-way error model given in equation (1). Suppose Assumptions 1 and 3 hold, as well as Assumption 2 with $\bm \gamma_i = 0$. Then for all $(g, t)$ with $g > t$, $\widehat{\bm \tau}_{gt}$ is conditionally unbiased for $\expec{\tau_{it}}{D_{ig} = 1}$, has the linear form
+    \begin{equation}\label{eq:twfe_influence}
+        \sqrt{N_{g}} \big( \widehat{\tau}_{gt} - \tau_{gt} \big) 
+        = \frac{1}{\sqrt{N_{g}}}\sum_{i=1}^N D_{ig} (\tau_{it} - \tau_{gt} + u_{it} - \overline{u}_{i,t < T_0} - \overline{u}_{\infty,t} + \overline{u}_{\infty,t < T_0})
+    \end{equation}
+    and  
+    \begin{equation}\label{eq:twfe_asymptotic}
+        \sqrt{N_1}(\widehat{\tau}_{gt} - \tau_{gt}) \convd N(0, V_1 + V_0)
+    \end{equation}
+    as $N \rightarrow \infty$, where $V_1$ and $V_0$ are given below and $\tau_{gt} = \expec{y_{it}(g) - y_{it}(\infty)}{D_{ig} = 1}$ is the group-time average treatment effect (on the treated). $\blacksquare$
+\end{theorem}
+Theorem (\ref{theorem:twfe}) demonstrates the simplicity of our imputation procedure under the two-way error model. While the general factor structure requires more care, estimation and inference will yield a similar result.
+
+
+\subsection{Proof of Theorem \autoref{theorem:twfe}}
+
+The transformed post-treatment observations are
+\begin{equation}
+    \tilde{y}_{it} = \tau_{it} + u_{it} - \overline{u}_{\infty,t}  - \overline{u}_{i,t < T_0} + \overline{u}_{\infty,t < T_0}
+\end{equation}
+To show unbiasedness, take expectation conditional on $D_{ig} = 1$. This expected value is
+\begin{equation}
+    \expec{ \tau_{it} + u_{it} - \overline{u}_{i,t < T_0} - \overline{u}_{\infty,t} + \overline{u}_{\infty,t < T_0} }{D_{ig} = 1} = \expec{\tau_{it}}{D_{ig} = 1}
+\end{equation}
+by Assumption 2 and 3.
+
+For consistency, note that averaging over the sample with $D_{ig} = 1$, subtracting $\tau_{gt}$, and multiplying $\sqrt{N_{g}}$ gives
+\begin{align}
+    \sqrt{N_{g}} \big( \widehat{\tau}_{gt} - \tau_{gt} \big) 
+    = \frac{1}{\sqrt{N_{g}}}\sum_{i=1}^N D_{ig} (\tau_{it} - \tau_{gt} + u_{it} - \overline{u}_{i,t < T_0})
+    + \frac{1}{\sqrt{N_{g}}}\sum_{i = 1}^N D_{ig} (- \overline{u}_{\infty,t} + \overline{u}_{\infty,t < T_0}) 
+\end{align}
+which is two normalized sums of uncorrelated iid sequences that have mean zero (by iterated expectations) and finite fourth moments. % The right-hand side is the influence function for $\tau_{gt}$ so inference across terms is possible as well as inference for aggregates following \citet{Callaway_Santanna_2021}.
+
+Rewriting the second term in terms of the original averages $\frac{1}{N_\infty} \sum_{i=1}^N - u_{i,t} + \overline{u}_{i,t < T_0}$ gives:
+\begin{align*}
+    \sqrt{N_{g}} \big( \widehat{\tau}_{gt} - \tau_{gt} \big) 
+    &= \frac{1}{\sqrt{N_{g}}}\sum_{i=1}^N D_{ig} (\tau_{it} - \tau_{gt} + u_{it} - \overline{u}_{i,t < T_0}) \\
+    &\quad + \sqrt{\frac{N_g}{N_\infty}} \bigg ( \frac{1}{\sqrt{N_\infty}} \sum_{i = 1}^N D_{i\infty} (- u_{i,t} + \overline{u}_{i,t < T_0} ) \bigg)
+\end{align*}
+Since these terms are mean zero and uncorrelated, we find the variance of each term separately. 
+
+The first term has asymptotic variance 
+\begin{equation}
+V_1 = \expec{\Big( \tau_{it} - \tau_{gt} + u_{it} - \overline{u}_{i,t < T_0} \Big) \Big( \tau_{it} - \tau_{gt} + u_{it} - \overline{u}_{i,t < T_0} \Big)'}{D_{ig} = 1}
+\end{equation}
+and the second term has asymptotic variance
+\begin{equation}
+V_0 = \frac{\mathbb{P}(D_{ig} = 1)}{\mathbb{P}(D_{i\infty} = 1)} \expec{ \Big( \overline{u}_{i,t < T_0} - u_{i,t} \Big) \Big( \overline{u}_{i,t < T_0} - u_{i,t} \Big)' }{D_{i\infty} = 1}
+\end{equation}
+The result follows from the independence of the two sums.
+
+
+
+
+\section{Including Covariates}
+
+%11/29/2022 draft
+
+We now discuss the inclusion of covariates in the untreated potential outcome mean model. Allowing for covariates further weakens our parallel trends assumption by allowing selection to hold on unobserved heterogeneity as well as observed characteristics. Identifying the effects of covariates requires some kind of time and unit variation because we manually remove the level fixed effects. 
+
+A common inclusion in the treatment effects literature is time-constant variables with time-varying slopes. Suppose $\bm x_i$ is $1 \times K$ vector of time-constant covariates. We could write the mean model of the untreated outcomes as 
+\begin{equation}
+    \expec{y_{it}(\infty)}{x_i, \mu_i, \bm \gamma_i, D_i} = \bm x_i \bm \beta_t + \mu_i + \lambda_t + \bm{F}_t' \bm \gamma_i
+\end{equation}
+which allows observable covariates to have trending partial effects; covariates with constant slopes are captured by the unit effect. After removing the additive fixed effects, $\bm x_i \bm \beta_t$ will take the same form as the residuals of factor structure. Estimating $\bm{\theta}$ can be done jointly with the time-varying coefficients by applying the QLD transformation to the vector of $\tilde{y}_{it} - \tilde{x}_i \tilde{\beta}_t$. We cannot identify the underlying partial effects because of the time-demeaning, but we can include them for the sake of strengthening the parallel trends assumption.
+
+Time-constant covariates (or time-varying covariates fixed at their pre-treatment value) are often employed because there is little worry that they are affected by treatment. However, we could also include time- and individual-varying covariates of the form $\bm x_{it}$ that are allowed to have identifiable constant slopes if we assume their distribution is unaffected by treatment status. Let $\bm x_{it}$ be a $1 \times K$ vector of covariates that vary over $i$ and $t$. We can jointly estimate a $K \times 1$ vector of parameters $\bm \beta$ along with $\bm{\theta}$ using the moments
+\begin{equation}
+    \expec{\bm H(\bm{\theta})' (\tilde{\bm y_i} - \tilde{\bm X_i} \bm \beta) \otimes \bm w_i}{G_i = \infty} = \bm 0
+\end{equation}
+where $\Tilde{\bm X}_i$ is the $T \times K$ matrix of stacked covariates after our double-demeaning procedure.
+
+We could also allow slopes to vary across groups and estimate them via the group-specific pooled regression $D_{ig} y_{it}$ on $D_{ig} \bm x_{it}$ with unit-specific slopes on $D_{ig} \Tilde{\bm{F}}(\widehat{\bm{\theta}})_t$ for $t = 1,..., g-1$. Then we include the covariates and their respective slopes into the moment conditions
+\begin{equation}
+    \expec{(\tilde{\bm y}_{i,t\geq g} - \tilde{\bm X}_{i, t \geq g} \bm \beta_g) - \bm P(\tilde{\bm{F}}_{t \geq g}, \tilde{\bm{F}}_{t < g}) (\tilde{\bm y}_{i,t< g} - \tilde{\bm X}_{i, t < g} \bm \beta_g) - \bm \tau_g  }{G_i = g} = \bm 0
+\end{equation}
+We note that the above expression requires treatment to not affect the evolution of the covariates, a strong assumption in practice. \citet{Chan_and_Kwok_2022} make a similar assumption for their principal components difference-in-differences estimator. We study this assumption in the context of the common correlated effects model in \citet{Brown_Butts_Westerlund_2023}.
+
+
+\section{Testing Mean Equality of Factor Loadings}
+
+We develop this test in the context of the QLD estimation of \citet{Ahn_Lee_Schmidt_2013}. Specifically, we need $\expec{\bm \gamma_i} = \expec{\bm \gamma_i}{G_i = g}$ for all $g \in \mathcal{G}$. Our imputation approach allows us to identify these terms up to a rotation. To see how, let $\bm A^*$ be the rotation that imposes the \citet{Ahn_Lee_Schmidt_2013} normalization. Then
+\begin{align*}
+    \bm P(\bm I_{p}, \bm{F}(\bm{\theta})_{t < g}) \expec{\bm y_{i, t < g}}{G_i = g} 
+    &= \left( \bm{F}(\bm{\theta})_{t < g}' \bm{F}(\bm{\theta})_{t < g} \right)^{-1} \bm{F}(\bm{\theta})_{t < g}' \bm{F}_{t < g} \expec{\bm \gamma_i}{G_i = g}\\
+    &= \left( \bm{F}(\bm{\theta})_{t < g}' \bm{F}(\bm{\theta})_{t < g} \right)^{-1} \bm{F}(\bm{\theta})_{t < g}' \bm{F}(\bm{\theta})_{t < g} (\bm A^*)^{-1} \expec{\bm \gamma_i}{G_i = g}\\
+    &= (\bm A^*)^{-1} \expec{\bm \gamma_i}{G_i = g}
+\end{align*}
+where $\bm{F}(\bm{\theta}) = \bm{F} \bm A^*$.
+
+It is irrelevant that the means of the factor loadings are only known up to a nonsingular transformation, because $\bm A^*$ is the same for each $g \in \mathcal{G}$ by virtue of the common factors. We note that
+\begin{equation}
+    \expec{\bm \gamma_i}{G_i = g} - \expec{\bm \gamma_i} = \bm 0 \iff (\bm A^*)^{-1}(\expec{\bm \gamma_i}{G_i = g} - \expec{\bm \gamma_i}) = \bm 0
+\end{equation}
+The results above show how we can identify $(\bm A^*)^{-1} \expec{\bm \gamma_i}{G_i = g}$ by imputing the pre-treatment observations onto an identify matrix. 
+
+Collect the moments 
+\begin{gather*}
+    \expec{\frac{D_{i \infty}}{\mathbb{P}(D_{i \infty} = 1)}\bm H(\bm{\theta}) \tilde{\bm y}_i \otimes \bm w_i} = \bm 0\\
+    \expec{\frac{D_{i \infty}}{\mathbb{P}(D_{i \infty} = 1)} \left( \bm P(\bm I_p, \bm{F}(\bm{\theta})) \bm y_i - \bm \gamma^* \right)} = \bm 0\\
+    \expec{\frac{D_{i g_G}}{\mathbb{P}(D_{ig_G} = 1)} \left( \bm P(\bm I_p, \bm{F}(\bm{\theta})_{t < g_G}) \bm y_{i,t < g_G} - \bm \gamma_{g_G}^* \right) } = \bm 0\\
+    \vdots\\
+    \expec{\frac{D_{i g_1}}{\mathbb{P}(D_{ig_1} = 1)} \left( \bm P(\bm I_p, \bm{F}(\bm{\theta})_{t < g_1}) \bm y_{i,t < g_1} - \bm \gamma_{g_G}^* \right) } = \bm 0
+\end{gather*}
+The parameters $(\bm \gamma^*, \bm \gamma_{g_G}^*,...,\bm \gamma_{g_1}^*)$ represent the rotated means of the factor loadings. $\bm \gamma$ is the unconditional mean $(\bm A^*)^{-1}\expec{\bm \gamma_i}$ and $\bm \gamma_g$ is the conditional mean $(\bm A^*)^{-1}\expec{\bm \gamma_i}{G_i = g}$ for $g \in \mathcal{G}$. We include estimation of the factors for convenience, so that one does not need to directly calculate the effect of first-stage estimation on the asymptotic variances of conditional means. 
+
+Joint GMM estimation of the above parameters, including $\bm{\theta}$, then allows one to test combinations of the rotated means. Specifically, we have the following result: 
+\begin{theorem}
+    If $\expec{\bm \gamma_i}{G_i = g} = \expec{\bm \gamma_i}$ for all $g \in \mathcal{G}$, then
+    \begin{equation}
+        \bm \gamma^* = \bm \gamma_{g_G}^* = ... = \bm \gamma_{g_1}^*
+    \end{equation}
+    $\blacksquare$
+\end{theorem}

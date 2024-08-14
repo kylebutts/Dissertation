@@ -1,0 +1,80 @@
+\documentclass[defaultstyle,11pt]{thesis}
+\usepackage{paper,math}
+\usepackage{hyperref}
+\usepackage{natbib}
+\usepackage{microtype}
+\newcommand{\ATT}{\text{ATT}}
+\newcommand{\dist}{\text{Dist}}
+
+% ----
+\newbool{INCLUDECOMMENTS}
+\booltrue{INCLUDECOMMENTS}
+\newcommand{\kyle}[1]{\textbf{Kyle: {#1}}}
+% ----
+
+\title{Three Essays on Applied Econometrics with Applications in Urban Economics}
+\author{Kyle}{Butts}
+\otherdegrees{
+  B.S., University of California Santa Barbara, 2017 \\
+  M.S., University of Colorado Boulder, 2020
+}
+\degree{Doctor of Philosophy}{Ph.D., Economics}
+\dept{Department of}{Economics}
+
+\advisor{Prof.}{Taylor Jaworski}
+\reader{Adam McCloskey}
+\readerThree{Brian Cadena}
+\readerFour{Stephen Billings}
+\readerFive{Richard Mansfield}
+
+\abstract{  
+  This dissertation contains three chapters that develop econometric tools for practical problems faced in the field of urban economics. 
+
+  The first chapter `Dynamic Treatment Effect Estimation with Interactive Fixed Effects and Short Panels' studies inference on dynamic average treatment effect parameters for staggered interventions when parallel trends are only valid conditional on unobserved interactive fixed effects. Interactive fixed effects allow for the common setting where units are assigned to treatment based on their exposure to national macroeconomic shocks. Our identification strategy allows for any first stage set of moments that estimate the column space of the macroeconomic shocks including principal components, common correlated effects, quasi-differencing, and more. This allows us to estimate and control for the confounding common macroeconomics shocks. This result applies to data sets with either many or few pre-treatment time periods. We investigate the effect of Walmart openings on local economic conditions and demonstrate that our methods ameliorate pre-trend violations commonly found in the literature.
+
+  The second chapter `Difference-in-Differences with Spatial Spillovers' addresses a common setting where treatment is assigned following geographic boundaries but the effects of the policies extend over space. Potential outcomes are modelled as a function of a unit's treatment status as well as their exposure to treatment status of other units. The paper highlights biases in standard estimators due to spillover effects. Then identification and estimation of treatment effects are discussed including in settings with staggered treatment adoption. The proposed methods are applied to reanalyze three empirical applications highlighting the impact of spillovers on policy evaluations.
+
+  The final chapter `Difference-in-Differences with Geocoded Microdata' 
+  formalizes a commonly-used estimator for the effects of spatially-targeted treatment with geocoded microdata. This estimator compares units immediately next to treatment to units slightly further away. I introduce intuitive identifying assumptions for the average treatment effect among affected units and illustrate problems when these assumptions fail. Since one of these assumptions requires knowledge of exactly how far treatment effects are experienced, I propose a new method that allows for nonparametric estimation following methods introduced in \citet{Cattaneo_Farrell_Feng_2019}. Since treatment effects can change with distance, the proposed estimator improves estimation by estimating a \emph{treatment effect curve}.
+}
+\dedication[Dedication]{	
+  % NEVER use \OnePageChapter here.
+	I dedicate this dissertation to my family: the queen Astrid, my boys Huckleberry and Archibald, and my best friend and teammate Hannah. You bring joy in my life every single day.
+}
+\acknowledgements{
+  \OnePageChapter	% *MUST* BE ONLY ONE PAGE!
+	
+  I extend my heartfelt gratitude to my family for their unwavering love and support throughout my life. A special thank you to my mom for being my first phone call for every challenge and to Star for bringing brightness into my life.
+
+  Thank you Rivka for helping me apply to programs and Phoenix for moving to Colorado and enjoying the mountains with me. I want to express my appreciation to all my classmates, including Brach, Jim, Alex, Payne, and Nick, for our first-year study sessions, research talk, and trips to the Downer. Thank you all for your valuable input and camaraderie. I am grateful to my coauthor Nicholas Brown for his collaboration and dedication.
+
+  Thank you to my advisor, Taylor Jaworski, for allowing me to be creative and follow my interests; encouraging me to think broader and with more rigor; and for guiding me through challenges and supporting my growth every step of the way. Thank you to my committee and the fantastic economists I've met in graduate school for lending eyes on my work and giving encouragement.
+}
+
+% \ToCisShort	% use this only for 1-page Table of Contents
+\LoFisShort	% use this only for 1-page Table of Figures
+% \emptyLoF	% use this if there is no List of Figures
+\LoTisShort	% use this only for 1-page Table of Tables
+% \emptyLoT	% use this if there is no List of Tables
+
+\begin{document}
+
+\input{generalized.tex}
+\input{spillovers.tex}
+\input{geocoded.tex}
+
+%-------------------------------------------------------------------------------
+\bibliographystyle{apalike}
+\bibliography{references}
+%-------------------------------------------------------------------------------
+
+%-------------------------------------------------------------------------------
+\appendix
+%-------------------------------------------------------------------------------
+
+\input{appendix-generalized.tex}
+\input{appendix-spillovers.tex}
+\input{appendix-geocoded.tex}
+
+\end{document}
+

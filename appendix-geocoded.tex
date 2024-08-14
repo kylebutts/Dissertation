@@ -1,0 +1,200 @@
+\chapter{Appendix to ``Difference-in-Differences with Geocoded Microdata''}
+
+% ------------------------------------------------------------------------------
+\section{Proofs}\label{sec:geocoded-proofs}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+\subsection{Proof of Proposition \ref{prop:ring_decomp}}
+% ------------------------------------------------------------------------------
+
+\begin{proof}
+  \ Note using our model (\ref{eq:model}), we have 
+  \begin{align*}s
+    \expec{\hat{\beta}_1} &= \expec{\Delta Y_{it}}{\mathcal{D}_t} - \expec{\Delta Y_{it}}{\mathcal{D}_c} \\
+    &= \expec{\tau(\dist_i) + \lambda(\dist_i) + \Delta \varepsilon_{i}}{\mathcal{D}_t} - \expec{\tau(\dist_i) + \lambda(\dist_i) + \Delta \varepsilon_{i}}{\mathcal{D}_c} \\ 
+    &= \expec{\tau(\dist_i)}{\mathcal{D}_t} - \expec{\tau(\dist_i)}{\mathcal{D}_c} + \expec{\lambda(\dist_i)}{\mathcal{D}_t} - \expec{\lambda(\dist_i)}{\mathcal{D}_c} \\ 
+    &\quad + \expec{\Delta\varepsilon_i}{\mathcal{D}_t} - \expec{\Delta\varepsilon_i}{\mathcal{D}_c}.
+  \end{align*}
+  By construction, $\Delta \varepsilon_i$ is uncorrelated with distance, so the final two terms in the sum is zero giving us result (i). Result (ii) comes from the fact that within $d_c$, $\lambda(\dist_i) = \lambda$. Result (iii) comes from the fact that if $d_t$ is the correct cutoff $\expec{\tau(\dist_i)}{\mathcal{D}_c} = 0$.
+\end{proof}
+
+% ------------------------------------------------------------------------------
+\subsection{Proof of Proposition \ref{prop:np_identification}}
+% ------------------------------------------------------------------------------
+
+\begin{proof}
+  \ Note that $L \to \infty$ implies $d_t \leq F_n^{-1}(\frac{L-1}{L})$ by assumption (\ref{assum:dt_weak}). This implies $\overline{\Delta Y}_L \to^p \lambda$ as $n \to \infty$ by assumption (\ref{assum:dt_weak}). 
+  
+  From assumption (\ref{assum:parallel}) and from our model (\ref{eq:model}), we have
+  \begin{align*}
+    \hat{\tau}_j &= \overline{\Delta Y}_j - \overline{\Delta Y}_L \\
+    &\to^p \expec{\tau(\dist)}{\dist \in \mathcal{D}_j} + \lambda - \lambda \\
+    &= \expec{\tau(\dist)}{\dist \in \mathcal{D}_j}
+  \end{align*}
+
+  As $L \to \infty$ and $n \to \infty$, we have that $\mathcal{D}_j$ approaches a set containing a singular point, say $d_j$. Therefore 
+  $$ 
+    \hat{\tau}_j \to^p \expec{\tau(\dist)}{\dist = d_j}
+  $$
+
+  The sum of $\hat{\tau}_j$ therefore approach the conditional expectation function of $\tau(\dist)$ pointwisely. See \cite{Cattaneo_Farrell_Feng_2019} for proof of uniform convergence and underlying smoothness conditions for nonparametric consistency.
+\end{proof}
+
+
+% ------------------------------------------------------------------------------
+\section{Monte Carlo Simulations} \label{sec:monte}
+% ------------------------------------------------------------------------------
+
+In the following section, I describe a set of Monte Carlo simulations that compare the standard rings method with the proposed nonparametric method. I generate a number of units on the unit circle for two periods using the following data-generating process proposed in \cite{diamond2019wants}:
+\begin{equation}\label{eq:monte}
+p_{it} = 1 + \tau(\dist_i) \one_{t=1} + \beta_{\text{Lat}} \text{Lat}_i + \lambda \one_{t = 1} + \beta_{\text{Lon}} \text{Lon}_i + \varepsilon_{it},
+\end{equation}
+where $(\text{Lat}_i, \text{Lon}_i)$ is units' $x$ and $y$ coordinates on the unit circle, $\beta_{\text{Lat}} \sim N(0, 0.036)$ and $\beta_{\text{Lon}} \sim N(0, 0.036)$ determine how the price levels evolve over the unit circle, $\lambda \sim N(0,0.025)$ is the constant common trend, $\varepsilon_{it} \sim N(0, 0.036)$ are idiosyncratic errors (uncorrelated with distance). 
+
+The key component of my simulations is the treatment effect curve, $\tau(\dist_i)$, which I vary across simulations:
+\begin{align*}
+  \tau_1(\dist) &= 0.15 * \one_{\dist < 0.4} \\
+  \tau_2(\dist) &= \left( 0.5 * (0.8 - \dist)^2 \right) * 1_{\dist < 0.8} \\
+  \tau_3(\dist) &= \left( -0.15 + 1.2875 * \dist - 1.375 * \dist^2 \right) * 1_{\dist < 0.8} \\
+  \tau_4(\dist) &= \left( 0.5 * (0.8 - \dist)^2 \right) * 1_{\dist < 0.25} \\
+\end{align*}
+
+First, to compare the rings method and the nonparametric under favorable conditions for the ring method, I use $\tau_1$ which assumes the treatment effect curve is flat for a fixed distance which aligns with the ring method. Second, I use the treatment effect curve proposed by \cite{diamond2019wants} which is a positive effect that declines to 0 by $\dist = 0.8$. This treatment effect curve is difficult to estimate since it evolves smoothly over space. However, the estimate of a ring might be close to the average treatment effect since the curve is positive everywhere. Third, I use $\tau_3$ which starts with a negative effect which becomes positive around $\dist = 0.3$ and then becomes 0 by $\dist = 0.8$. This treatment effect curve is the most difficult for the rings method since the average treatment effect is near zero even though there are significant positive and negative effects. Last, I modify $\tau_2$ to cuttoff at $\dist = 0.25$, so that only units \textit{really} close to treatment are affected by treatment. This is potentially difficult for the rings estimtator which will average over many non-affected units.
+
+For each treatment effect curve, I generate data according to (\ref{eq:monte}) and estimate the treatment effect curve in three ways. I use that standard rings method with two rings $\{(0, 0.6], (0.6,1] \}$, with three rings $\{(0, 0.3], (0.3, 0.6], (0.5,1] \}$, and the nonparametric ring method proposed in section \ref{sec:lspartition}. Note that these simulations are performed with the correct maximum treatment distance satisfied, which in practice is not known. In cases where the true treatment effect distance is not known, this would introduce additional bias in the treatment effect curve estimate. 
+
+I compare each estimator on their ability to estimate the true treatment effect curve. To do so, for each point in the data, I compute the predicted treatment effect $\hat{\tau}(\dist_i)$ and compare it to the true treatment effect $\tau(\dist_i)$. I'll label this quantity, $\upsilon_i \equiv \hat{\tau}(\dist_i) - \tau(\dist_i)$, as the prediction error. To summarize the prediction error, I calculate the mean-squared prediction error, $\hat{E}(\upsilon_i^2)$, and the average absolute prediction error, $\hat{E}( | \upsilon_i |)$, where the average is taken over the sample of observations with positive treatment effects. These numbers are a combination (i) how well the predicted treatment effect curve is approximated (bias of estimator) and (ii) the estimator's noise in repeated sampling (variance of estimator). Additonally, since it is often desirable to accurately estimate the largest treatment effects, I report the bias in predicted treatment effect at $0.4$ miles following \cite{diamond2019wants}. For each metric, I divide by the nonparametric estimator's value, so that values $> 1$ perform worse than the nonparametric method and values $< 1$ perform better.
+
+\begin{table}[!htbp]
+  \caption{Monte Carlo Simulations} 
+  \label{tab:monte}
+
+  \begin{center}
+  \begin{tabular}{@{} l @{\hskip 2.5mm} *{2}{c} @{\hskip 2.5mm} *{2}{c} @{\hskip 2.5mm} *{2}{c} @{}}
+    \toprule
+
+    & \multicolumn{2}{c}{$\hat{E}(\upsilon_i^2)$} & \multicolumn{2}{c}{$\hat{E}(|\upsilon_i|)$} & \multicolumn{2}{c}{Bias at $0.4$ miles}\\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} 
+    
+    \multicolumn{1}{l}{$n$} & \multicolumn{1}{c}{2 Rings} & \multicolumn{1}{c}{3 Rings} & \multicolumn{1}{c}{2 Rings} & \multicolumn{1}{c}{3 Rings} & \multicolumn{1}{c}{2 Rings} & \multicolumn{1}{c}{3 Rings} \\
+
+    \toprule
+
+    \multicolumn{7}{l}{\rule{0pt}{3mm}$\tau_1$} \\
+    \midrule
+    \input{tables/geocoded/monte_te1.tex}
+
+
+    \multicolumn{7}{l}{\rule{0pt}{3mm}$\tau_2$} \\
+    \midrule
+    \input{tables/geocoded/monte_te2.tex}
+    
+    \multicolumn{7}{l}{\rule{0pt}{3mm}$\tau_3$} \\
+    \midrule
+    \input{tables/geocoded/monte_te3.tex}
+
+    \multicolumn{7}{l}{\rule{0pt}{3mm}$\tau_4$} \\
+    \midrule
+    \input{tables/geocoded/monte_te4.tex}
+
+    \bottomrule
+  \end{tabular} 
+  \note{
+    The table shows the results from 2,000 Monte Carlo simulations. For each treatment effect curve $\tau_i$, I generate data following (\ref{eq:monte}) and estimate the treatment effect curve using the standard ring methods with 2 or 3 rings and the nonparametric method. Columns (2)-(3) report the mean-squared prediction error, (4)-(5) report the mean absolute prediction error, and (6)-(7) report the prediction error at 0.4 miles. All results are normalized by the nonparametric value, so that values $>1$ performed worse than the nonparametric method and vice-versa.
+  }
+  \end{center}
+\end{table}
+
+The results are presented in \autoref{tab:monte}. For $\tau_1$, the 2 ring and 3 ring method performed better than the nonparametric method across metrics and across sample sizes. This is due to (i) the large rings accurately approximate the treatment effect curve and (ii) the sampling variation of the nonparametric estimator. For $\tau_2$ and $\tau_3$, the rings estimators perform better at small sample sizes, but by 5000 observations, the nonparametric method performs better in all 3 metrics which makes sense given that nonparametric estimators perform better with larger amounts of data. Last, for $\tau_4$, the nonparametric estimator performs better than the rings method even at small sample sizes. This is because the rings method is able to better tease out the large treatment effect \textit{very close} to treatment than the rings method. Overall, the results of \autoref{tab:monte} show that the rings method performs better in most settings with at least a few thousand observations except for in the most-favorable case where the treatment effect curve is approximately flat.
+
+
+
+% ------------------------------------------------------------------------------
+\section{Cross-Sectional Data}
+% ------------------------------------------------------------------------------
+
+In the case of cross sectional data, we have individuals $i$ that appear in the data in period $t(i) \in \{0,1\}$. However, since we no longer are able to observe units in both periods, we are not able to take first differences. Our model therefore will have a $\lambda$ term for both periods. Therefore, $\lambda$ includes the average of $\mu_i$, covariates, and period shocks at a given distance.
+
+\begin{equation}\label{eq:model_rc}
+  Y_{i} = \tau(\dist_i) \one_{t(i) = 1} + \lambda_{t(i)}(\dist_i) + \nu_{it}.  
+\end{equation}
+
+The parallel trends assumption must be modified now in the case of cross sections:
+
+\begin{assumption}[Local Parallel Trends (RC)]\label{assum:parallel_rc}
+  For a distance $\bar{d}$, we say that `local parallel trends' hold if for all positive $d, d' \leq \bar{d}$, then $\lambda_1(d) - \lambda_0(d) = \lambda_1(d') - \lambda_0(d')$.
+\end{assumption}
+
+\begin{assumption}[Average Parallel Trends (RC)]\label{assum:parallel_weak_rc}
+  For a pair of distances $d_t$ and $d_c$, we say that `average parallel trends' hold if 
+  $$
+    \expec{\lambda_1(d)}{0 \leq d \leq d_t} - \expec{\lambda_0(d)}{0 \leq d \leq d_t} = \expec{\lambda_1(d)}{d_t < d \leq d_c} - \expec{\lambda_0(d)}{d_t < d \leq d_c}.
+  $$
+\end{assumption}
+
+The parallel trends assumption is a bit more complicated now and is theoretically more strict. \nameref{assum:parallel_rc} still require changes in outcomes over time for a given unit $i$ must be constant across distance (or on average in the case of \nameref{assum:parallel_weak_rc}). However since the composition of units can change over time, this also requires that the average of individual fixed effects must be constant across time. This is well understood in the hedonic pricing literature that the composition of homes being sold can not change over time for identification (e.g. \cite{Linden_Rockoff_2008}).
+
+For completeness, I rewrite the other necessary assumption
+\begin{assumption}[Correct $d_t$]
+  A distance $d_t$ satisfies this assumption if (i) for all $d \leq d_t$, $\tau(d) > 0$ and for all $d > d_t$, $\tau(d) = 0$ and (ii) $F(d_c) - F(d_t) > 0$.
+\end{assumption}
+
+The ring estimate in the case of cross-sections is given by:
+\begin{equation}
+  \Delta Y_{i} = \beta_0 + \beta_1 \one_{i \in \mathcal{D}_c} \one_{t(i) = 1} + \beta_2 \one_{i \in \mathcal{D}_t} \one_{t(i) = 0} + \beta_4 \one_{i \in \mathcal{D}_t} \one_{t(i) = 1} + u_{it}.
+\end{equation}
+
+\begin{proposition}[Decomposition of Ring Estimate (RC)]\label{prop:ring_decomp_rc}  
+  Given that units follow model (\ref{eq:model_rc}),
+  \begin{enumerate}
+    \item[(i)] The estimate of $\beta_4$ in (\ref{eq:ring_method}) has the following expectation:
+    \begin{align*}
+      \expec{\hat{\beta}_4} &= \expec{\Delta Y_{it}}{\mathcal{D}_t} - \expec{\Delta Y_{it}}{\mathcal{D}_c} \\
+      &=  \underbrace{\expec{\tau(\dist)}{\mathcal{D}_t} - \expec{\tau(\dist)}{\mathcal{D}_c} }_{\text{Difference in Treatment Effect}} \\
+      &\quad + ( \expec{\lambda_1(\dist)}{\mathcal{D}_t, t(i) = 1} - \expec{\lambda_0(\dist)}{\mathcal{D}_t, t(i) = 0} ) \\
+      &\quad - ( \expec{\lambda_1(\dist)}{\mathcal{D}_c, t(i) = 1} - \expec{\lambda_0(\dist)}{\mathcal{D}_c, t(i) = 0} )   \\
+    \end{align*}
+    
+    \item[(ii)] If $d_c$ satisfies \nameref{assum:parallel_rc} or, more weakly, if $d_t$ and $d_c$ satisfy \nameref{assum:parallel_weak_rc}, then
+    \[ 
+      \expec{\hat{\beta}_4} = 
+      \underbrace{\expec{\tau(\dist)}{\mathcal{D}_t} - \expec{\tau(\dist)}{\mathcal{D}_c} }_{\text{Difference in Treatment Effect}}.
+    \] 
+  
+    \item[(iii)] If $d_c$ satisfies \nameref{assum:parallel_rc} and $d_t$ satisfies Assumption \ref{assum:dt}, then
+    \[ 
+      \expec{\hat{\beta}_4} = \bar{\tau}.
+    \]
+  \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+  \ With some algebraic manipulation, we can rewrite our difference-in-differences estimator as
+  \begin{align*}
+    &\left(\expec{Y_{i}}{\mathcal{D}_t, t(i) = 1} - \expec{Y_{i}}{\mathcal{D}_t, t(i) = 0}\right) - \left(\expec{Y_{i}}{\mathcal{D}_c, t(i) = 1} - \expec{Y_{i}}{\mathcal{D}_c, t(i) = 0})\right) \\
+    &\quad = \left(\expec{ \tau(\dist_i) + \lambda_1(\dist_i) + \nu_{i1}}{\mathcal{D}_t, t(i) = 1} - \expec{\lambda_0(\dist_i) + \nu_{i0}}{\mathcal{D}_t, t(i) = 0}\right) \\
+    &\quad\quad - \left(\expec{ \tau(\dist_i) + \lambda_1(\dist_i) + \nu_{i1}}{\mathcal{D}_c, t(i) = 1} - \expec{\lambda_0(\dist_i) + \nu_{i0}}{\mathcal{D}_c, t(i) = 0}\right) \\
+    &\quad = \expec{\tau(\dist_i)}{\mathcal{D}_t, t(i) = 1} - \expec{\tau(\dist_i)}{\mathcal{D}_c, t(i) = 0} + \\
+    &\quad\quad \left( \expec{\lambda_1(\dist_i)}{\mathcal{D}_t, t(i) = 1} - \expec{\lambda_0(\dist_i)}{\mathcal{D}_t, t(i) = 0} \right) \\
+    &\quad\quad - \left( \expec{\lambda_1(\dist_i)}{\mathcal{D}_c, t(i) = 1} - \expec{\lambda_0(\dist_i)}{\mathcal{D}_c, t(i) = 0} \right),
+  \end{align*}
+  where the terms consisting of $\nu_{it}$ cancel out as they are uncorrelated with distance. Propositions (ii) and (iii) follow the same arguments as in the panel case.
+\end{proof}
+
+Part (i) of this theorem shows that under no parallel trends assumption, the `Difference in Trends' term becomes the change in $\lambda_t$ for the treated ring minus the change in for the control ring. As discussed above, this change in lambdas can be do to period specific shocks or changes in the composition of units observed in each period.
+
+% ------------------------------------------------------------------------------
+\subsection{Nonparametric Estimation}
+% ------------------------------------------------------------------------------
+
+Since we can no longer perform a single nonparmaetric regression on first differences in the context of cross-sections, our nonparametric estimator must be adjusted. The modified procedure will fit a nonparametric estimate of $\expec{Y_i}{\dist_i, t}$ seperately for $t = 0$ and $t = 1$ with a restriction that the bin intervals $\{ \mathcal{D}_1, \dots, \mathcal{D}_{L} \}$ must be the same in both samples.\footnote{The number of  intervals are decided based on a different IMSE condition described in \cite{cattaneo2019binscatter} and the quantiles are calculated using the distribution of distances in both periods.} Then, for each distance bin we calculate an estimate of $\bar{Y}_{j,t}$ which corresponds to the sample average of observations in period $t$ in bin $\mathcal{D}_j$. 
+
+Then estimates of $\tau_j$ can be formed as
+\[
+  \hat{\tau}_j = \left[\bar{Y}_{j,1} - \bar{Y}_{j,0}\right] - \left[\bar{Y}_{L,1} - \bar{Y}_{L,0}\right],
+\]
+where, as before, the change in trends in the last ring serve as an estimate for the counterfactual trend. Under \nameref{assum:parallel_rc}, estimates of $\hat{tau}_j$ are consistent for $\expec{\tau(\dist_i)}{i \in \mathcal{D}_j}$ and the treatment effect curve converges uniformly to the treatment effect curve $\tau(d)$. 
+
+Standard errors are formed similarly as before, but is the difference of four means so they can be formed as $\sqrt{\sigma_{j,1}^2 + \sigma_{j,0}^2 + \sigma_{L,1}^2 + \sigma_{L,0}^2}$. These individual estimates and standard errors can be produced by the Stata/R package \texttt{binsreg}. 
+

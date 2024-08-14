@@ -1,0 +1,63 @@
+\chapter{Appendix to ``Difference-in-Differences with Spatial Spillovers''}
+
+% ------------------------------------------------------------------------------
+\section{Proofs}
+\label{sec:spillover-proofs}
+% ------------------------------------------------------------------------------
+
+% ------------------------------------------------------------------------------
+\subsection{Proof of Proposition \ref{prop:bias}}
+% ------------------------------------------------------------------------------
+
+\begin{align*}
+    &\underbrace{\expec{Y_{i1} - Y_{i0} \mid D_i = 1 } - \expec{Y_{i1} - Y_{i0} \mid D_i = 0 }}_{\text{Difference-in-Differences}} \\
+    &= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0})  \mid D_i = 1 } - \expec{Y_{i1}(0, h_i(\bm{D})) - Y_{i0}(0, \bm{0}) \mid D_i = 0 } \\
+    % &= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0})  \mid D_i = 1 } \\
+    % &\quad\quad - \expec{Y_{i1}(0, h_i(\bm{D})) + Y_{i1}(0, \bm{0}) - Y_{i1}(0, \bm{0}) - Y_{i0}(0, \bm{0}) \mid D_i = 0 } \\
+    &= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0})  \mid D_i = 1 } - \expec{Y_{i1}(0, \bm{0}) - Y_{i0}(0, \bm{0}) \mid D_i = 0} \\ 
+    &\quad\quad - \expec{Y_{i1}(0, h_i(\bm{D})) - Y_{i1}(0, \bm{0})\mid D_i = 0} \\ 
+    &= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0})  \mid D_i = 1 } - \expec{Y_{i1}(0, \bm{0}) - Y_{i0}(0, \bm{0}) \mid D_i = 1} \\
+    &\quad\quad - \expec{Y_{i1}(0, h_i(\bm{D})) - Y_{i1}(0, \bm{0})\mid D_i = 0} \\  
+    % &= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0}) - Y_{i1}(0, \bm{0}) + Y_{i0}(0, \bm{0})\mid D_i = 1 } \\
+    % &\quad\quad - \expec{Y_{i1}(0, h_i(\bm{D})) - Y_{i1}(0, \bm{0})\mid D_i = 0}\\
+    &= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i1}(0, \bm{0}) \mid D_i = 1 } - \expec{Y_{i1}(0, h_i(\bm{D})) - Y_{i1}(0, \bm{0})\mid D_i = 0} \\
+    &\equiv \tau_{\text{total}} - \tau_{\text{spill}}(0), 
+\end{align*}
+where the first equality comes from the potential outcomes and the \nameref{assumption:no-anticipation} assumption, the second from adding and subtracting terms, the third equality follows from the \nameref{assumption:parallel} assumption, and the final equality follows from the definitions of total and spillover effects.
+
+% ------------------------------------------------------------------------------
+\subsection{Proof of Proposition \ref{prop:total_effect}}
+% ------------------------------------------------------------------------------
+
+\begin{align*}
+    &\expec{Y_{i1} - Y_{i0} \ \mid \ D_i = 1} - \expec{Y_{i1} - Y_{i0} \ \mid \ D_i = 0, S_i =0} \\
+    &\quad\quad= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0}) \ \mid \ D_i = 1} - \expec{Y_{i1}(0, \bm{0}) - Y_{i0}(0, \bm{0}) \ \mid \ D_i = 0, S_i =0} \\
+    &\quad\quad= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0}) \ \mid \ D_i = 1} - \expec{Y_{i1}(0, \bm{0}) - Y_{i0}(0, \bm{0}) \ \mid \ D_i = 1} \\
+    &\quad\quad= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i0}(0, \bm{0}) - Y_{i1}(0, \bm{0}) + Y_{i0}(0, \bm{0}) \ \mid \ D_i = 1} \\
+    &\quad\quad= \expec{Y_{i1}(1, h_i(\bm{D})) - Y_{i1}(0, \bm{0}) \ \mid \ D_i = 1} \\
+    &\quad\quad\equiv \tau_{\text{total}},
+\end{align*}
+where the first equality comes from the fact that $S_i = 0$ implies $h_i(\bm{D}) = 0$, the second equality from parallel trends assumption (\ref{assumption:parallel-mod}), and the last by definition of the total effect.
+
+
+
+% ------------------------------------------------------------------------------
+\subsection{Identification of Imputation Estimator}\label{sec:identification_imputation}
+% ------------------------------------------------------------------------------
+
+This section will give identification arguments for the total effect and spillover effects. First, note under \nameref{assumption:parallel_staggered}, we have 
+\begin{align*}
+  \expec{Y_{it}(d_{it}, h_i(\bm{D}_t)) - \mu_i - \lambda_t \ | \ d_{it} = 1} 
+  &= \expec{\tau_{it}(d_{it}, h_i(\bm{D}_t)) + \varepsilon_{it} \ | \ d_{it} = 1} \\
+  &= \expec{\tau_{it}(d_{it}, h_i(\bm{D}_t)) \ | \ d_{it} = 1} \\
+  &= \tau_{total}.
+\end{align*}
+In the first stage, we estimate $\mu_i$ and $\lambda_t$ using observations with $d_{it}$ and $S_{it} = 0$. Unbiasedness/consistency follows from \nameref{assumption:local} and \nameref{assumption:no-anticipation_staggered} and the arguments of the appendix of \citet{Gardner_2021}.
+
+A similar argument follows for spillover effects. Again, assuming \nameref{assumption:parallel_staggered}, we have 
+\begin{align*}
+  \expec{Y_{it}(d_{it}, h_i(\bm{D}_t)) - \mu_i - \lambda_t \ | \ d_{it} = 0, S_{it} = 1} 
+  &= \expec{\tau_{it}(d_{it}, h_i(\bm{D}_t)) + \varepsilon_{it} \ | \ d_{it} = 0, S_{it} = 0} \\
+  &= \expec{\tau_{it}(d_{it}, h_i(\bm{D}_t)) \ | \ d_{it} = 0, S_{it} = 1}.
+\end{align*}
+\vspace*{-5mm}
